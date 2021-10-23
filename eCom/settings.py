@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'cat.MyUser'
+AUTH_USER_MODEL = 'accounts.MyUser'
 
 # Application definition
 
@@ -39,8 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rename_app',
     'rest_framework',
-    'cat',
+    'store',
+    'accounts',
+    'cart',
     'rest_framework.authtoken',
     'drf_yasg',
 ]
