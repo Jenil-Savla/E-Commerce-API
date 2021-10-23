@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product
+from .models import Product,Category
 from .serializers import ProductSerializer
 
 from rest_framework.generics import GenericAPIView
@@ -22,8 +22,10 @@ class ProductCreate(mixins.CreateModelMixin, GenericAPIView):
     queryset = Product.objects.all()
 
     def post(self, request, *args, **kwargs):
-       return self.create(request, *args, **kwargs)
-
+        cat = request.data['category']
+        id = cat.get('id')
+        category = Category.objects.get(id = id)
+        return self.create(request, *args, **kwargs)
 
 class ProductDetails(
     mixins.RetrieveModelMixin,

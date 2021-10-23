@@ -25,12 +25,11 @@ class RegisterAPI(GenericAPIView):
 		serializer.is_valid(raise_exception = True)
 		user = serializer.save()
 		token = Token.objects.create(user=user)
-		
 		current_site = get_current_site(request).domain
 		relative_link = reverse('email-verify')
-		link = 'http://'+current_site+relative_link+'?username='+user.username
-		data = {'email_body': ' ', 'subject':'Email Verification', 'to' : user.email}
-		#Util.send_email(data)
+		link = 'http://'+current_site+relative_link+'?token='+ token.key
+		data = {'email_body': f'Use this link to get verified {link} ', 'subject':'Email Verification', 'to' : user.email}
+		Util.send_email(data)
 		
 		return Response(serializer.data
 		,status=status.HTTP_201_CREATED)
@@ -56,8 +55,8 @@ class LoginAPI(GenericAPIView):
 		
 class EmailVerify(GenericAPIView):
 	def get(self,request):
-		username = request.GET.get('username')
-		user = MyUser.objects.get(username = username)
+		token = request.GET.get('token')
+		user = MyUser.objects.get(auth_token = token)
 		if not user.is_verified:
 			user.is_verified = True
 			user.save()
