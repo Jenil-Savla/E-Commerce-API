@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate,login
-from django.shortcuts import redirect
 
 from .models import MyUser
 from .serializers import RegisterSerializer, LoginSerializer
@@ -28,8 +27,8 @@ class RegisterAPI(GenericAPIView):
 		current_site = get_current_site(request).domain
 		relative_link = reverse('email-verify')
 		link = 'http://'+current_site+relative_link+'?token='+ token.key
-		data = {'email_body': f'Use this link to get verified {link} ', 'subject':'Email Verification', 'to' : user.email}
-		Util.send_email(data)
+		data = {'email_body': f'Use this link to get verified {link}. if you are seller then you need to get seller status then please mail your seller application. we will contact you regarding same.', 'subject':'Email Verification', 'to' : user.email}
+		#Util.send_email(data)
 		
 		return Response(serializer.data
 		,status=status.HTTP_201_CREATED)
@@ -57,7 +56,7 @@ class EmailVerify(GenericAPIView):
 	def get(self,request):
 		token = request.GET.get('token')
 		user = MyUser.objects.get(auth_token = token)
-		if not user.is_verified:
-			user.is_verified = True
+		if not user.is_active:
+			user.is_active = True
 			user.save()
 		return Response('Account Verified', status=status.HTTP_200_OK)

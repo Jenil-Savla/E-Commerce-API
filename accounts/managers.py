@@ -11,6 +11,8 @@ class MyUserManager(BaseUserManager):
 		return user
 		
 	def create_superuser(self,username, email,phone_no,password=None,**extra_fields):
+		extra_fields.setdefault('is_seller',True)
+		extra_fields.setdefault('is_active',True)
 		extra_fields.setdefault('is_staff',True)
 		extra_fields.setdefault('is_superuser',True)
 		user = self.create_user(username,email, phone_no,password,**extra_fields)
