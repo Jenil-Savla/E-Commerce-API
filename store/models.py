@@ -40,5 +40,8 @@ class Product(models.Model):
 	rating = models.CharField(max_length = 100, choices = STARS)
 	date_created = models.DateTimeField(auto_now_add = True)
 	
+	class Meta:
+		ordering = ['category','name']
+	
 	def __str__(self):
 		return self.name
