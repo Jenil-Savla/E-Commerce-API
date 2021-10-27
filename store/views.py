@@ -4,15 +4,20 @@ from .serializers import ProductSerializer
 from rest_framework.generics import GenericAPIView
 from rest_framework import mixins,status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from .permissions import SellerStatus
 
 
 class Catalogue(mixins.ListModelMixin,GenericAPIView):
     serializer_class = ProductSerializer
+    pagination_class = PageNumberPagination
+    
     queryset = Product.objects.all()
+    
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+        
 class ProductCreate(SellerStatus,mixins.CreateModelMixin, GenericAPIView):
 
     serializer_class = ProductSerializer
