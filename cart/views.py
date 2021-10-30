@@ -65,24 +65,17 @@ class CartView(GenericAPIView):
 		
 @api_view(['POST'])
 def start_payment(request,pk):
-    # request.data is coming from frontend
-    '''amount = request.data['amount']
-    name = request.data['name']
-    email = request.data['email']'''
 
-    # we are saving an order instance (keeping isPaid=False)
+    # we are saving an order instance
     order = Order.objects.get(id = pk)
     queryset = CartItem.objects.filter(cart=order).first()
     serializer = CartItemSerializer(queryset)
     # we have to send the param_dict to the frontend
     # these credentials will be passed to paytm order processor to verify the business account
-    param_dict = dict()
-    param_dict['body'] = {
-        'requestType' : 'Payment',
+    param_dict = {
         'MID': env('MERCHANTID'),
         'ORDER_ID': str(order.id),
-        'TXN_AMOUNT': {'value' : 
-         str(serializer.data['cart']['final_payment']), 'currency' : 'INR'},
+        'TXN_AMOUNT': str(serializer.data['cart']['final_payment']),
         'CUST_ID': str(order.user.id),
         'INDUSTRY_TYPE_ID': 'Retail',
         'WEBSITE': 'WEBSTAGING',
@@ -91,16 +84,10 @@ def start_payment(request,pk):
         # this is the url of handlepayment function, paytm will send a POST request to the fuction associated with this CALLBACK_URL
     }
 
-    # create new checksum (unique hashed string) using our merchant key with every paytm payment
-    '''param_dict['CHECKSUMHASH'] '''
-    checksum = Checksum.generate_checksum(param_dict['body'], env('MERCHANTKEY'))
-    param_dict['head']={'signature' : checksum}
-    post_data = json.dumps(param_dict)
+    ## create new checksum (unique hashed string) using our merchant key with every paytm payment
+    param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, env('MERCHANTKEY'))
     # send the dictionary with all the credentials to the frontend
-    url = f"https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid={env('MERCHANTID')}&orderId={str(order.id)}"
-    response = requests.post(url,data=post_data, headers = {"Content-type": "application/json"}).json()
-    #return redirect('http://127.0.0.1:8000/cart/handlepayment')
-    return Response(response)
+    return render(request,'paytm/checkout.html', context = param_dict)
 
 
 @api_view(['POST'])
@@ -136,5 +123,4 @@ def handlepayment(request):
             return render(request, 'paytm/paymentstatus.html', {'response': response_dict})
         else:
             print('order was not successful because' + response_dict['RESPMSG'])
-            return Response({'success':'Payment successful'})
-            #return render(request, 'paytm/paymentstatus.html', {'response': response_dict})
+            return render(request, 'paytm/paymentstatus.html', {'response': response_dict})
