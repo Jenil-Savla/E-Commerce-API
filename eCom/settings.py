@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'accounts.MyUser'
 
+CORS_ALLOW_ALL_ORIGINS=True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'cart',
     'rest_framework.authtoken',
     'drf_yasg',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = { 'DEFAULT_AUTHENTICATION_CLASSES' : [
@@ -56,6 +59,7 @@ REST_FRAMEWORK = { 'DEFAULT_AUTHENTICATION_CLASSES' : [
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,10 +71,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'eCom.urls'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

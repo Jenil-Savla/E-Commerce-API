@@ -4,6 +4,7 @@ from store.serializers import ProductSerializer
 
 class OrderSerializer(serializers.ModelSerializer):
 	final_payment = serializers.SerializerMethodField()
+	depth = 2
 	class Meta:
 		model = Order
 		fields = '__all__'
