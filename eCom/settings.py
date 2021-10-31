@@ -58,6 +58,7 @@ REST_FRAMEWORK = { 'DEFAULT_AUTHENTICATION_CLASSES' : [
 		'PAGE_SIZE' : 1,
 }
 
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',

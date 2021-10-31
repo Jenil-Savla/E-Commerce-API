@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate,login
 
 from .models import MyUser
-from .serializers import RegisterSerializer, LoginSerializer#, OAuthSerializer
+from .serializers import RegisterSerializer, LoginSerializer, OAuthSerializer
 from .Utils import Util
 
 from rest_framework.generics import GenericAPIView
@@ -60,13 +60,12 @@ class EmailVerify(GenericAPIView):
 			user.save()
 		return Response('Account Verified', status=status.HTTP_200_OK)
 		
-'''
+
 class OAuth(GenericAPIView):
 	serializer_class = OAuthSerializer
 	
 	def post(self,request):
-		serializer = self.serializer_class(request.data)
+		serializer = self.serializer_class(data=request.data)
 		serializer.is_valid(raise_exception = True)
 		data = ((serializer.validated_data)['auth_token'])
 		return Response(data,status = status.HTTP_201_CREATED)
-'''

@@ -74,7 +74,7 @@ def start_payment(request,pk):
     # these credentials will be passed to paytm order processor to verify the business account
     param_dict = {
         'MID': env('MERCHANTID'),
-        'ORDER_ID': str(order.id),
+        'ORDER_ID': str(order.id)+'1',
         'TXN_AMOUNT': str(serializer.data['cart']['final_payment']),
         'CUST_ID': str(order.user.id),
         'INDUSTRY_TYPE_ID': 'Retail',

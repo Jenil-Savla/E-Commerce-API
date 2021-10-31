@@ -16,6 +16,7 @@ class MyUser(AbstractBaseUser,PermissionsMixin):
 	is_active = models.BooleanField(default=False)
 	is_seller = models.BooleanField(default = False)
 	is_staff = models.BooleanField(default=False)
+	provider = models.CharField(max_length = 20,default = 'email')
 	
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = ['email','phone_no']
