@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_rename_app',
+    #'django_rename_app',
     'rest_framework',
     'store',
     'accounts',
@@ -49,15 +49,37 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'corsheaders',
+    #Oauth
+    'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
 ]
 
 REST_FRAMEWORK = { 'DEFAULT_AUTHENTICATION_CLASSES' : [
 		'rest_framework.authentication.TokenAuthentication' ,
+        #Oauth
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
 		], 
 		'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.PageNumberPagination',
 		'PAGE_SIZE' : 1,
 }
 
+AUTHENTICATION_BACKENDS = (
+   'rest_framework_social_oauth2.backends.DjangoOAuth2',
+   'django.contrib.auth.backends.ModelBackend',
+   #Facebook
+   'social_core.backends.facebook.FacebookAppOAuth2',
+   'social_core.backends.facebook.FacebookOAuth2',
+
+)
+
+SOCIAL_AUTH_FACEBOOK_KEY = '886327408744409'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'da18554e23f7ab7143d01fcdc8b30294'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email'
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -85,6 +107,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #Oauth
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
