@@ -71,15 +71,11 @@ AUTHENTICATION_BACKENDS = (
    #Facebook
    'social_core.backends.facebook.FacebookAppOAuth2',
    'social_core.backends.facebook.FacebookOAuth2',
+   #Google
+   'social_core.backends.google.GoogleOAuth2'
 
 )
 
-SOCIAL_AUTH_FACEBOOK_KEY = '886327408744409'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'da18554e23f7ab7143d01fcdc8b30294'
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id, name, email'
-}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

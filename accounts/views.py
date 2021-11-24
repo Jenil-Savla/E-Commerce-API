@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate,login
 
 from .models import MyUser
-from .serializers import RegisterSerializer, LoginSerializer, OAuthSerializer
+from .serializers import RegisterSerializer, LoginSerializer
 from .Utils import Util
 
 from rest_framework.generics import GenericAPIView
@@ -11,7 +11,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-
 
 class RegisterAPI(GenericAPIView):
 	
@@ -40,14 +39,12 @@ class LoginAPI(GenericAPIView):
 	def post(self,request,*args,**kwargs ):
 		username = request.data.get('username',None)
 		password = request.data.get('password',None)
-		user1 = MyUser.objects.get(username = username)
-		print(user1)
 		user = authenticate(username = username, password = password)
 		print(user)
 		if user :
 			login(request,user)
 			serializer = self.serializer_class(user)
-			token = Token.objects.get(user=user)
+			token,k = Token.objects.get_or_create(user=user)
 			return Response({'token' : token.key,'username' : user.username},status = status.HTTP_200_OK)
 		return Response('Invalid Credentials',status = status.HTTP_404_NOT_FOUND)
 		
@@ -59,13 +56,3 @@ class EmailVerify(GenericAPIView):
 			user.is_active = True
 			user.save()
 		return Response('Account Verified', status=status.HTTP_200_OK)
-		
-
-class OAuth(GenericAPIView):
-	serializer_class = OAuthSerializer
-	
-	def post(self,request):
-		serializer = self.serializer_class(data=request.data)
-		serializer.is_valid(raise_exception = True)
-		data = ((serializer.validated_data)['auth_token'])
-		return Response(data,status = status.HTTP_201_CREATED)

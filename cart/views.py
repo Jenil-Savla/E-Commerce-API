@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from store.models import Product
 
 from .models import Order,CartItem
-from .serializers import OrderSerializer, CartItemSerializer
+from .serializers import CartItemSerializer
 
 from rest_framework.response import Response
 
