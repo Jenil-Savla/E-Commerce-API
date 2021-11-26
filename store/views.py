@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from .models import Product,Category
 from .serializers import ProductSerializer
 
@@ -17,16 +18,11 @@ class ProductViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get(self,request):
     	return Response(serializer.data)
 
-'''
-class Catalogue(mixins.ListModelMixin, GenericAPIView):
-    serializer_class = ProductSerializer
-    pagination_class = PageNumberPagination
-    queryset = Product.objects.all()
-    
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-'''
-        
+
+class HomePage(GenericAPIView):
+    def get(self, request):
+        return Response({'Catalogue': '/products','Login' : '/accounts/login/', 'Register': '/accounts/register','Cart':'/cart/cart','Checkout':'/cart/pay','Sell':'/product-create','Edit Products':'/product-details/<str:pk>'})
+
 class ProductCreate(SellerStatus,mixins.CreateModelMixin, GenericAPIView):
 
     serializer_class = ProductSerializer
@@ -35,10 +31,12 @@ class ProductCreate(SellerStatus,mixins.CreateModelMixin, GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         self.check_object_permissions(request, request.user)
+        user_id = request.user.id
+        request.data['user'] = user_id
         cat = request.data['category']
         id = cat.get('id')
         category = Category.objects.get(id = id)
-        return self.create(request, *args, **kwargs)
+        return self.create(request,*args, **kwargs)
 
 class ProductDetails(SellerStatus,
     mixins.RetrieveModelMixin,

@@ -6,5 +6,7 @@ class SellerStatus(permissions.BasePermission):
 		if request.method in permissions.SAFE_METHODS:
 			return True
 		else:
-			return request.user.is_seller
-	
+			try:
+				return obj.is_seller
+			except:
+				return obj.user == request.user

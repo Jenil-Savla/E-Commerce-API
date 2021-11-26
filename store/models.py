@@ -31,7 +31,7 @@ class Product(models.Model):
 	('5','5 Stars'),
 	)
 	
-	#user = models.ForiegnKey(MyUser,on_delete=models.CASCADE)
+	user = models.ForeignKey(MyUser,on_delete=models.CASCADE,default = 1)
 	category = models.ForeignKey(Category,on_delete=models.CASCADE)
 	name = models.CharField(max_length = 100)
 	price = models.FloatField()

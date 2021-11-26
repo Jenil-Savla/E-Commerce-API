@@ -6,7 +6,7 @@ from . import views
 router = DefaultRouter()
 router.register(r'products',views.ProductViewSet, basename = 'product')
 urlpatterns = [
-   #path('',views.Catalogue.as_view(),name="Catalogue"),
+   path('',views.HomePage.as_view(),name="HomePage"),
    path('product-create/', views.ProductCreate.as_view(), name='product-create'),
    path('product-details/<str:pk>', views.ProductDetails.as_view(), name='product-details'),
 ]
